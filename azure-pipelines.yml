@@ -34,8 +34,8 @@ stages:
         cacheHitVar: 'MAVEN_CACHE_RESTORED'
       displayName: Cache Maven packages
     - script: |
-        echo "Listing build directory:"
-        ls -la $(Build.SourcesDirectory)/target/ 
+        ls -la $(MAVEN_CACHE_FOLDER)
+      displayName: List Maven cache directory
     - task: Maven@3
       displayName: Build Quarkus Native Application
       inputs:
