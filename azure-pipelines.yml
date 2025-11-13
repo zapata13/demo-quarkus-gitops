@@ -38,7 +38,6 @@ stages:
       inputs:
         mavenPomFile: 'pom.xml'
         goals: 'clean install $(MAVEN_OPTS)' # Activates the native profile
-        mavenOptions: '-Xmx3072m $(MAVEN_OPTS)'
         javaHomeOption: 'JDKVersion'
         jdkVersionOption: '21' # Or your required JDK version
         mavenVersionOption: 'Default'
