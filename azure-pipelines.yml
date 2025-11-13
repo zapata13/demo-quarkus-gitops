@@ -26,17 +26,22 @@ stages:
     steps:
     - task: Cache@2
       inputs:
-        key: '"maven" | "$(Agent.OS)" | **/pom.xml'
+        key: '"maven" | "$(Agent.OS)" | **/pom.xml, **/settings.xml'
         restoreKeys: |
           "maven" | "$(Agent.OS)"
           "maven"
         path: $(MAVEN_CACHE_FOLDER)
+        cacheHitVar: 'MAVEN_CACHE_RESTORED'
       displayName: Cache Maven packages
+    - script: |
+        echo "Listing build directory:"
+        ls -la $(Build.SourcesDirectory)/target/ 
     - task: Maven@3
       displayName: Build Quarkus Native Application
       inputs:
         mavenPomFile: 'pom.xml'
-        goals: 'clean install $(MAVEN_OPTS)' # Activates the native profile
+        goals: 'clean install' # Activates the native profile
+        mavenOptions: '-Xmx3072m $(MAVEN_OPTS)'
         javaHomeOption: 'JDKVersion'
         jdkVersionOption: '21' # Or your required JDK version
         mavenVersionOption: 'Default'
