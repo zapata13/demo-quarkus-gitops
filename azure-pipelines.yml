@@ -10,6 +10,7 @@ resources:
 
 variables:
   tag: '$(Build.BuildId)'
+  MAVEN_CACHE_FOLDER: $(Pipeline.Workspace)/s/.m2/repository
 
 stages:
 - stage: Build
@@ -20,10 +21,18 @@ stages:
     pool:
       vmImage: ubuntu-latest
     steps:
+    - task: Cache@2
+      inputs:
+        key: '"maven" | "$(Agent.OS)" | pom.xml'
+        restoreKeys: |
+          "maven" | "$(Agent.OS)"
+          "maven"
+        path: $(MAVEN_CACHE_FOLDER)
+      displayName: Cache Maven packages
     - task: Maven@3
       inputs:
         mavenPomFile: 'pom.xml'
-        goals: 'clean install -Dnative -s settings.xml' # Activates the native profile
+        goals: 'clean install -Dnative -s settings.xml -DskipTests' # Activates the native profile
         javaHomeOption: 'JDKVersion'
         jdkVersionOption: '21' # Or your required JDK version
         mavenVersionOption: 'Default'
@@ -31,6 +40,6 @@ stages:
       displayName: Build an image
       inputs:
         command: build
-        dockerfile: 'src/main/docker/Dockerfile.native'
+        dockerfile: '$(Build.SourcesDirectory)/src/main/docker/Dockerfile.native'
         tags: |
           $(tag)
