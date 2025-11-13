@@ -36,7 +36,7 @@ stages:
     - script: |
         ls -la $(MAVEN_CACHE_FOLDER)
       displayName: List Maven cache directory
-    - task: Maven@3
+    - task: Maven@4
       displayName: Build Quarkus Native Application
       inputs:
         mavenPomFile: 'pom.xml'
