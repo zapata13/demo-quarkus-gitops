@@ -46,6 +46,7 @@ stages:
       displayName: Build Container Image
       inputs:
         command: build
+        buildContext: '$(Build.SourcesDirectory)'
         dockerfile: '$(Build.SourcesDirectory)/src/main/docker/Dockerfile.native'
         tags: |
           $(tag)
