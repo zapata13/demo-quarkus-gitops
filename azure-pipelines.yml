@@ -10,7 +10,7 @@ resources:
 
 variables:
   tag: '$(Build.BuildId)'
-  MAVEN_CACHE_FOLDER: $(Pipeline.Workspace)/s/.m2/repository
+  MAVEN_CACHE_FOLDER: $(Pipeline.Workspace)/.m2/repository
   MAVEN_OPTS: '-Dnative -s settings.xml -DskipTests -Dmaven.repo.local=$(MAVEN_CACHE_FOLDER)'
 
 stages:
@@ -30,7 +30,6 @@ stages:
           "maven"
         path: $(MAVEN_CACHE_FOLDER)
       displayName: Cache Maven packages
-    - script: mvn install -B -e
     - task: Maven@3
       inputs:
         mavenPomFile: 'pom.xml'
