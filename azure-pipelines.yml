@@ -12,6 +12,8 @@ variables:
   tag: '$(Build.BuildId)'
   MAVEN_CACHE_FOLDER: $(Pipeline.Workspace)/.m2/repository
   MAVEN_OPTS: '-Dnative -s settings.xml -DskipTests -Dmaven.repo.local=$(MAVEN_CACHE_FOLDER)'
+  repository: 'erivasza/demo-az-devops'
+  serviceConnection: 'QuayRegistry'
 
 stages:
 - stage: Build
@@ -45,8 +47,11 @@ stages:
     - task: Docker@2
       displayName: Build Container Image
       inputs:
-        command: build
+        command: buildAndPush
         buildContext: '$(Build.SourcesDirectory)'
         dockerfile: '$(Build.SourcesDirectory)/src/main/docker/Dockerfile.native'
+        containerRegistry: '$(serviceConnection)'
+        repository: '$(repository)'
         tags: |
           $(tag)
+          latest
