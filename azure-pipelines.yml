@@ -23,7 +23,7 @@ stages:
     - task: Maven@3
       inputs:
         mavenPomFile: 'pom.xml'
-        goals: 'clean install -Dnative' # Activates the native profile
+        goals: 'clean install -Dnative -s settings.xml' # Activates the native profile
         javaHomeOption: 'JDKVersion'
         jdkVersionOption: '21' # Or your required JDK version
         mavenVersionOption: 'Default'
