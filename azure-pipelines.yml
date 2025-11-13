@@ -40,7 +40,7 @@ stages:
       displayName: Build Quarkus Native Application
       inputs:
         mavenPomFile: 'pom.xml'
-        goals: 'clean install' # Activates the native profile
+        goals: 'clean install $(MAVEN_OPTS)' # Activates the native profile
         mavenOptions: '-Xmx3072m $(MAVEN_OPTS)'
         javaHomeOption: 'JDKVersion'
         jdkVersionOption: '21' # Or your required JDK version
