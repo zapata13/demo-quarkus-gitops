@@ -85,6 +85,7 @@ stages:
           sed -i 's|\bimage: $(QUAY_URL)/$(repository):\b.*|\bimage: $(QUAY_URL)/$(repository):$(tag)\b|' deployment.yaml
           git config --global user.email "zapata@redhat.com"
           git config --global user.name "zapata13"
+          git remote set-url origin https://oauth2access:$(GH_PAT)@github.com/zapata13/demo-conf-gitops.git
           git add deployment.yaml
           git commit -m "Update image tag to $(tag)"
           git push origin main
