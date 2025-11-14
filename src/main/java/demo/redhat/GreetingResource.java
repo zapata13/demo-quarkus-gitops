@@ -11,6 +11,6 @@ public class GreetingResource {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public String hello() {
-        return "Hello from Quarkus from azure devops pipeline!";
+        return "Hello from Quarkus to BANTRAB Demo!";
     }
 }
