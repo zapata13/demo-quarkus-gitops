@@ -82,7 +82,7 @@ stages:
           ls -la 
           cd demo-conf-gitops
           ls -la
-          sed -i 's|\bimage: $(QUAY_URL)/$(repository):\b.*|\bimage: $(QUAY_URL)/$(repository):$(tag)\b|' deployment.yaml
+          sed -i 's|image: $(QUAY_URL)/$(repository):.*|image: $(QUAY_URL)/$(repository):$(tag)|' deployment.yaml
           git config --global user.email "zapata@redhat.com"
           git config --global user.name "zapata13"
           git remote set-url origin https://oauth2access:$(GH_PAT)@github.com/zapata13/demo-conf-gitops.git
