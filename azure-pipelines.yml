@@ -79,7 +79,9 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
+          ls -la 
           cd demo-conf-gitops
+          ls -la
           sed -i '' 's|\bimage: $(QUAY_URL)/$(repository):\b.*|\bimage: $(QUAY_URL)/$(repository):$(tag)\b|' deployment.yaml
           git config --global user.email "zapata@redhat.com"
           git config --global user.name "zapata13"
