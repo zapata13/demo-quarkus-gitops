@@ -11,7 +11,7 @@ resources:
 variables:
   tag: '$(Build.BuildId)'
   MAVEN_CACHE_FOLDER: $(Pipeline.Workspace)/.m2/repository
-  MAVEN_OPTS: '-Dnative -s settings.xml -DskipTests -Dmaven.repo.local=$(MAVEN_CACHE_FOLDER)'
+  MAVEN_OPTS: '-s settings.xml -DskipTests -Dmaven.repo.local=$(MAVEN_CACHE_FOLDER)'
   repository: 'erivasza/demo-az-devops'
   serviceConnection: 'QuayRegistry'
   GITOPS_REPO: 'https://github.com/zapata13/demo-conf-gitops.git'
@@ -52,7 +52,7 @@ stages:
       inputs:
         command: buildAndPush
         buildContext: '$(Build.SourcesDirectory)'
-        dockerfile: '$(Build.SourcesDirectory)/src/main/docker/Dockerfile.native'
+        dockerfile: '$(Build.SourcesDirectory)/src/main/docker/Dockerfile.jvm'
         containerRegistry: '$(serviceConnection)'
         repository: '$(repository)'
         tags: |
@@ -82,7 +82,7 @@ stages:
           ls -la 
           cd demo-conf-gitops
           ls -la
-          sed -i '' 's|\bimage: $(QUAY_URL)/$(repository):\b.*|\bimage: $(QUAY_URL)/$(repository):$(tag)\b|' deployment.yaml
+          sed -i 's|\bimage: $(QUAY_URL)/$(repository):\b.*|\bimage: $(QUAY_URL)/$(repository):$(tag)\b|' deployment.yaml
           git config --global user.email "zapata@redhat.com"
           git config --global user.name "zapata13"
           git add deployment.yaml
