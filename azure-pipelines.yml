@@ -14,6 +14,8 @@ variables:
   MAVEN_OPTS: '-Dnative -s settings.xml -DskipTests -Dmaven.repo.local=$(MAVEN_CACHE_FOLDER)'
   repository: 'erivasza/demo-az-devops'
   serviceConnection: 'QuayRegistry'
+  GITOPS_REPO: 'https://github.com/zapata13/demo-conf-gitops.git'
+  QUAY_URL: 'quay-demo-quay-quay-rh.apps.cluster-w58bc.dynamic.redhatworkshops.io'
 
 stages:
 - stage: Build
@@ -26,13 +28,14 @@ stages:
     steps:
     - task: Cache@2
       inputs:
-        key: '"maven" | "$(Agent.OS)" | **/pom.xml'
+        key: '"maven" | "$(Agent.OS)" | **/pom.xml, **/settings.xml'
         restoreKeys: |
           "maven" | "$(Agent.OS)"
           "maven"
         path: $(MAVEN_CACHE_FOLDER)
+        cacheHitVar: 'MAVEN_CACHE_RESTORED'
       displayName: Cache Maven packages
-    - task: Maven@3
+    - task: Maven@4
       displayName: Build Quarkus Native Application
       inputs:
         mavenPomFile: 'pom.xml'
@@ -55,3 +58,31 @@ stages:
         tags: |
           $(tag)
           latest
+- stage: GitOps
+  displayName: Deploy to GitOps repository
+  dependsOn: Build
+  jobs:
+  - job: GitOps
+    displayName: Update GitOps repo
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+    - checkout: none
+    - task: Bash@3
+      displayName: Clone GitOps repository
+      inputs:
+        targetType: 'inline'
+        script: |
+          git clone $(GITOPS_REPO)
+    - task: Bash@3
+      displayName: Update image tag in GitOps repository
+      inputs:
+        targetType: 'inline'
+        script: |
+          cd demo-conf-gitops
+          sed -i '' 's|image: $(QUAY_URL)/$(repository):.*|image: $(QUAY_URL)/$(repository):$(tag)|' deployment.yaml
+          git config --global user.email "zapata@redhat.com"
+          git config --global user.name "zapata13"
+          git add deployment.yaml
+          git commit -m "Update image tag to $(tag)"
+          git push origin main
