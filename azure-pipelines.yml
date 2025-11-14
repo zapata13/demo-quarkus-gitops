@@ -80,7 +80,7 @@ stages:
         targetType: 'inline'
         script: |
           cd demo-conf-gitops
-          sed -i '' 's|image: $(QUAY_URL)/$(repository):.*|image: $(QUAY_URL)/$(repository):$(tag)|' deployment.yaml
+          sed -i '' 's|\bimage: $(QUAY_URL)/$(repository):\b.*|\bimage: $(QUAY_URL)/$(repository):$(tag)\b|' deployment.yaml
           git config --global user.email "zapata@redhat.com"
           git config --global user.name "zapata13"
           git add deployment.yaml
