@@ -12,10 +12,10 @@ variables:
   tag: '$(Build.BuildId)'
   MAVEN_CACHE_FOLDER: $(Pipeline.Workspace)/.m2/repository
   MAVEN_OPTS: '-s settings.xml -DskipTests -Dmaven.repo.local=$(MAVEN_CACHE_FOLDER)'
-  repository: 'erivasza/demo-az-devops'
+  repository: 'devnations-ceaca/demo-az-devops'
   serviceConnection: 'QuayRegistry'
   GITOPS_REPO: 'https://github.com/zapata13/demo-conf-gitops.git'
-  QUAY_URL: 'quay-demo-quay-quay-rh.apps.cluster-w58bc.dynamic.redhatworkshops.io'
+  QUAY_URL: 'quay.io'
 
 stages:
 - stage: Build
