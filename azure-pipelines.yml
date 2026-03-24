@@ -16,6 +16,7 @@ variables:
   serviceConnection: 'QuayRegistry'
   GITOPS_REPO: 'https://github.com/zapata13/demo-conf-gitops.git'
   QUAY_URL: 'quay.io'
+  GITHUB_CONNECTION: 'github.com_zapata13'
 
 stages:
 - stage: Build
@@ -67,7 +68,8 @@ stages:
     pool:
       vmImage: ubuntu-latest
     steps:
-    - checkout: none
+    - checkout: self
+      persistCredentials: true
     - task: Bash@3
       displayName: Clone GitOps repository
       inputs:
@@ -85,7 +87,6 @@ stages:
           sed -i 's|image: $(QUAY_URL)/$(repository):.*|image: $(QUAY_URL)/$(repository):$(tag)|' deployment.yaml
           git config --global user.email "zapata@redhat.com"
           git config --global user.name "zapata13"
-          git remote set-url origin https://oauth2access:$(GH_PAT)@github.com/zapata13/demo-conf-gitops.git
           git add deployment.yaml
           git commit -m "Update image tag to $(tag)"
           git push origin main
